@@ -1,56 +1,52 @@
 package dao
 
 import (
-	"database/sql"
-	"log"
+	"errors"
+	"time"
 
 	"ShortUrlApp/models"
 )
 
-type UrlRecordDaoDBImpl struct {
-	Db *sql.DB
+type UrlRecordDaoImpl struct {
+	DbStrategy    *UrlRecordDaoDBImpl
+	CacheStrategy *UrlRecordDaoCacheImpl
 }
 
-func (impl *UrlRecordDaoDBImpl) Save(record *models.UrlRecord) error {
-	query := "INSERT INTO urls(short_url, long_url) VALUES (?, ?)"
-	stmt, err := impl.Db.Prepare(query)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-	_, err = stmt.Exec(record.ShortUrl, record.LongUrl)
+func (impl *UrlRecordDaoImpl) Save(record *models.UrlRecord) error {
+	err := impl.DbStrategy.Save(record)
 	if err != nil {
 		return err
 	}
 
+	impl.CacheStrategy.Save(record)
 	return nil
 }
 
-func (impl *UrlRecordDaoDBImpl) Find(shortUrl string) (*models.UrlRecord, error) {
-	query := "SELECT short_url, long_url FROM urls WHERE short_url = ?"
-	stmt, err := impl.Db.Prepare(query)
-	defer stmt.Close()
-	var result *models.UrlRecord
-	err = stmt.QueryRow(shortUrl).Scan(&result)
+func (impl *UrlRecordDaoImpl) Find(shortUrl string) (*models.UrlRecord, error) {
+	record, err := impl.CacheStrategy.Find(shortUrl)
+	if err == nil {
+		return record, nil
+	}
+
+	record, err = impl.DbStrategy.Find(shortUrl)
 	if err != nil {
-		log.Print(err)
 		return nil, err
 	}
+	if record.ExpireAt.Before(time.Now()) {
+		impl.Delete(record.ShortUrl)
+		return nil, errors.New("record doesn't exist")
+	}
 
-	return result, nil
+	impl.CacheStrategy.Save(record)
+	return record, err
 }
 
-func (impl *UrlRecordDaoDBImpl) Delete(shortUrl string) error {
-	query := "DELETE from urls WHERE short_url = ?"
-	stmt, err := impl.Db.Prepare(query)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-	_, err = stmt.Exec(shortUrl)
+func (impl *UrlRecordDaoImpl) Delete(shortUrl string) error {
+	err := impl.CacheStrategy.Delete(shortUrl)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	err = impl.DbStrategy.Delete(shortUrl)
+	return err
 }
