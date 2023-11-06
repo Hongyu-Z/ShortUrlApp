@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 
+	"ShortUrlApp/dao"
+	"ShortUrlApp/database"
 	"ShortUrlApp/models"
 	"github.com/gorilla/mux"
 )
@@ -18,10 +20,15 @@ type Service interface {
 }
 
 type UrlService struct {
+	urlRecordDao dao.UrlRecordDao
 }
 
 func NewUrlService() *UrlService {
-	return &UrlService{}
+	db := database.Init()
+	urlRecordDao := &dao.UrlRecordDaoDBImpl{Db: db}
+	return &UrlService{
+		urlRecordDao: urlRecordDao,
+	}
 }
 
 func (s *UrlService) UrlGetHandler(writer http.ResponseWriter, request *http.Request) {
