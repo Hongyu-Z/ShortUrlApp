@@ -123,6 +123,6 @@ func (s *UrlService) UrlStatsGetHandler(writer http.ResponseWriter, request *htt
 		return
 	}
 
-	log.Printf("successfully processed get url stats request. oneDayCount:%d oneWeekCount:%d allTimeCount:%d", oneDayCount, oneWeekCount, allTimeCount)
+	log.Printf("successfully processed get url stats request for %s. oneDayCount:%d oneWeekCount:%d allTimeCount:%d", shortUrl, oneDayCount, oneWeekCount, allTimeCount)
 	writer.Write([]byte(fmt.Sprintf("oneDayCount:%d oneWeekCount:%d allTimeCount:%d", oneDayCount, oneWeekCount, allTimeCount)))
 }

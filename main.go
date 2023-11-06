@@ -10,7 +10,8 @@ import (
 )
 
 func main() {
-	log.Printf("service starting")
+	address := "127.0.0.1:8080"
+	log.Printf("service starting on " + address)
 
 	service := service.NewUrlService()
 	r := mux.NewRouter()
@@ -21,7 +22,7 @@ func main() {
 
 	srv := &http.Server{
 		Handler: r,
-		Addr:    "127.0.0.1:8080",
+		Addr:    address,
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 1 * time.Second,
 		ReadTimeout:  1 * time.Second,
