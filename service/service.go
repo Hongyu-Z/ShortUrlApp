@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"ShortUrlApp/cache"
 	"ShortUrlApp/dao"
 	"ShortUrlApp/database"
 	"ShortUrlApp/models"
@@ -21,13 +22,21 @@ type Service interface {
 
 type UrlService struct {
 	urlRecordDao dao.UrlRecordDao
+	UrlStatsDao  dao.UrlStatsDao
 }
 
 func NewUrlService() *UrlService {
 	db := database.Init()
-	urlRecordDao := &dao.UrlRecordDaoDBImpl{Db: db}
+	cache := cache.Init()
+	urlRecordDao := &dao.UrlRecordDaoImpl{
+		DbStrategy:    &dao.UrlRecordDaoDBImpl{Db: db},
+		CacheStrategy: &dao.UrlRecordDaoCacheImpl{Cache: cache},
+	}
+	urlStatsDao := &dao.UrlStatsDaoDBImpl{Db: db}
+
 	return &UrlService{
 		urlRecordDao: urlRecordDao,
+		UrlStatsDao:  urlStatsDao,
 	}
 }
 
@@ -59,13 +68,15 @@ func (s *UrlService) UrlPostHandler(writer http.ResponseWriter, request *http.Re
 	if err := decoder.Decode(&record); err != nil {
 		log.Printf("invalid")
 		handleInvalidRequest(writer, request)
+		return
 	}
 	defer request.Body.Close()
 
-	log.Printf("%s -> %s", record.ShortUrl, record.LongUrl)
+	log.Printf("%s -> %s, expiring at %s", record.ShortUrl, record.LongUrl, record.ExpireAt)
 
 	err := s.addUrlRecord(record)
 	if err != nil {
+		log.Print(err)
 		handleInvalidRequest(writer, request)
 		return
 	}

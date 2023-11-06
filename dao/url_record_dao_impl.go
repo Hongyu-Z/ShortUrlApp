@@ -32,7 +32,7 @@ func (impl *UrlRecordDaoImpl) Find(shortUrl string) (*models.UrlRecord, error) {
 	if err != nil {
 		return nil, err
 	}
-	if record.ExpireAt.Before(time.Now()) {
+	if !record.ExpireAt.IsZero() && record.ExpireAt.Before(time.Now()) {
 		impl.Delete(record.ShortUrl)
 		return nil, errors.New("record doesn't exist")
 	}

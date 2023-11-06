@@ -1,5 +1,12 @@
 package service
 
+import (
+	"log"
+	"time"
+
+	"ShortUrlApp/models"
+)
+
 func (s *UrlService) getUrlRecord(shortUrl string) (string, error) {
 	record, err := s.urlRecordDao.Find(shortUrl)
 	if err != nil {
@@ -12,5 +19,9 @@ func (s *UrlService) getUrlRecord(shortUrl string) (string, error) {
 }
 
 func (s *UrlService) reportStats(shortUrl string) {
-	//todo: implement this
+	event := &models.UrlStatsEvent{ShortUrl: shortUrl, CreatedAt: time.Now()}
+	err := s.UrlStatsDao.Create(event)
+	if err != nil {
+		log.Print(err)
+	}
 }

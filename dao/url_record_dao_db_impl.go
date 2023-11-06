@@ -12,13 +12,13 @@ type UrlRecordDaoDBImpl struct {
 }
 
 func (impl *UrlRecordDaoDBImpl) Save(record *models.UrlRecord) error {
-	query := "INSERT INTO urls(short_url, long_url) VALUES (?, ?)"
+	query := "INSERT INTO urls(short_url, long_url, expire_at) VALUES (?, ?, ?)"
 	stmt, err := impl.Db.Prepare(query)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(record.ShortUrl, record.LongUrl)
+	_, err = stmt.Exec(record.ShortUrl, record.LongUrl, record.ExpireAt)
 	if err != nil {
 		return err
 	}
@@ -27,11 +27,11 @@ func (impl *UrlRecordDaoDBImpl) Save(record *models.UrlRecord) error {
 }
 
 func (impl *UrlRecordDaoDBImpl) Find(shortUrl string) (*models.UrlRecord, error) {
-	query := "SELECT short_url, long_url FROM urls WHERE short_url = ?"
+	query := "SELECT short_url, long_url, expire_at FROM urls WHERE short_url = ?"
 	stmt, err := impl.Db.Prepare(query)
 	defer stmt.Close()
-	var result *models.UrlRecord
-	err = stmt.QueryRow(shortUrl).Scan(&result)
+	result := &models.UrlRecord{}
+	err = stmt.QueryRow(shortUrl).Scan(&result.ShortUrl, &result.LongUrl, &result.ExpireAt)
 	if err != nil {
 		log.Print(err)
 		return nil, err

@@ -1,4 +1,4 @@
-package ShortUrlApp
+package main
 
 import (
 	"log"
