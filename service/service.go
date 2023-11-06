@@ -64,7 +64,7 @@ func (s *UrlService) UrlPostHandler(writer http.ResponseWriter, request *http.Re
 	var record *models.UrlRecord
 	decoder := json.NewDecoder(request.Body)
 	if err := decoder.Decode(&record); err != nil {
-		log.Printf("invalid request")
+		log.Print(err)
 		handleInvalidRequest(writer, request)
 		return
 	}
