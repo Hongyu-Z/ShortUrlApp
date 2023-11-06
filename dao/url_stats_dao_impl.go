@@ -2,7 +2,6 @@ package dao
 
 import (
 	"database/sql"
-	"log"
 	"time"
 
 	"ShortUrlApp/models"
@@ -32,9 +31,8 @@ func (impl UrlStatsDaoDBImpl) GetCount(shortUrl string) (int, int, int, error) {
 		return 0, 0, 0, err
 	}
 	defer stmt.Close()
-	var oneDayCount, oneWeekCount, allTimeCount, lastTenSecCount int
-	stmt.QueryRow(shortUrl, time.Now().Add(time.Second*-10)).Scan(&lastTenSecCount)
-	log.Printf("DEBUG: lastTenSecCount:%d", lastTenSecCount)
+	var oneDayCount, oneWeekCount, allTimeCount int
+
 	err1 := stmt.QueryRow(shortUrl, time.Now().AddDate(0, 0, -1)).Scan(&oneDayCount)
 	err2 := stmt.QueryRow(shortUrl, time.Now().AddDate(0, 0, -7)).Scan(&oneWeekCount)
 	err3 := stmt.QueryRow(shortUrl, 0).Scan(&allTimeCount)
