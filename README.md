@@ -1,13 +1,14 @@
 # ShortUrlApp
 
 ## Demo
-<a href="https://youtu.be/XmaZGW1bTVw"><img src="https://i9.ytimg.com/vi_webp/XmaZGW1bTVw/mq2.webp?sqp=CMjkpaoG-oaymwEmCMACELQB8quKqQMa8AEB-AHUCYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLCBx6jymnNA06mKkb_20WC1H1xoMw" alt="Demo Video"></a>
+<a href="https://youtu.be/XmaZGW1bTVw"><img width="400" src="https://github.com/Hongyu-Z/ShortUrlApp/assets/13667793/51f33a98-a071-42f7-ac28-8fe963a7b470" alt="Demo Video"></a>
 
 ## How to build and run
 Assuming local GoLang environment is set up already
 1. Clone the repo 
 2. Build the app with ```Go Build```
 3. Run the app with ```./ShortUrlApp```
+
 
 ## Endpoints
 **Get Url**
@@ -53,7 +54,8 @@ as the database and [TTLcache](https://github.com/jellydator/ttlcache) as the ca
 | short_url | short url                              | TEXT      |PK
 | long_url  | long url for redirection               | TEXT      |Not Null
 | expire_at | indicates when the entry should expire | Timestamp |Not Null
-Since short urls are always unique and are used in all requests, thus I'm using short_url as the primary key.
+
+Since short urls are always unique and are used in all requests, I'm using short_url as the primary key.
 
 > ### Stats Table ###
 | Column    | Desc                                 | Type      |Constraint
@@ -61,6 +63,7 @@ Since short urls are always unique and are used in all requests, thus I'm using 
 | id        | auto-increment id                    | TEXT      |PK
 | short_url | short url                            | TEXT      |FK
 | create_at | indicates when the entry was created | Timestamp |Not Null
+
 Auto-increment id is used as primary key. short_url is the foreign key that refers to short_url in URLs table. 
 "ON DELETE CASCADE" is enabled so that if the primary key in URLs table is deleted, the corresponding stats 
 event rows will be deleted as well. A composite index is created on short_url and created_at to expedite the 
