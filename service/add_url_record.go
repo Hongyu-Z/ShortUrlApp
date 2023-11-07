@@ -5,5 +5,5 @@ import (
 )
 
 func (s *UrlService) addUrlRecord(record *models.UrlRecord) error {
-	return s.urlRecordDao.Save(record)
+	return s.UrlRecordDao.Save(record)
 }

@@ -11,7 +11,7 @@ type UrlStatsDaoDBImpl struct {
 	Db *sql.DB
 }
 
-func (impl UrlStatsDaoDBImpl) Create(event *models.UrlStatsEvent) error {
+func (impl UrlStatsDaoDBImpl) Save(event *models.UrlStatsEvent) error {
 	stmt, err := impl.Db.Prepare("INSERT INTO stats(short_url, created_at) values(?, ?)")
 	if err != nil {
 		return err

@@ -8,7 +8,7 @@ import (
 )
 
 func (s *UrlService) getUrlRecord(shortUrl string) (string, error) {
-	record, err := s.urlRecordDao.Find(shortUrl)
+	record, err := s.UrlRecordDao.Find(shortUrl)
 	if err != nil {
 		return "", err
 	}
@@ -20,7 +20,7 @@ func (s *UrlService) getUrlRecord(shortUrl string) (string, error) {
 
 func (s *UrlService) reportStats(shortUrl string) {
 	event := &models.UrlStatsEvent{ShortUrl: shortUrl, CreatedAt: time.Now()}
-	err := s.UrlStatsDao.Create(event)
+	err := s.UrlStatsDao.Save(event)
 	if err != nil {
 		log.Print(err)
 	}

@@ -21,7 +21,7 @@ type Service interface {
 }
 
 type UrlService struct {
-	urlRecordDao dao.UrlRecordDao
+	UrlRecordDao dao.UrlRecordDao
 	UrlStatsDao  dao.UrlStatsDao
 }
 
@@ -35,7 +35,7 @@ func NewUrlService() *UrlService {
 	urlStatsDao := &dao.UrlStatsDaoDBImpl{Db: db}
 
 	return &UrlService{
-		urlRecordDao: urlRecordDao,
+		UrlRecordDao: urlRecordDao,
 		UrlStatsDao:  urlStatsDao,
 	}
 }
@@ -86,12 +86,6 @@ func (s *UrlService) UrlDeleteHandler(writer http.ResponseWriter, request *http.
 	shortUrl, ok := vars["id"]
 	if !ok {
 		log.Print("can't find id in request")
-		handleInvalidRequest(writer, request)
-		return
-	}
-	log.Printf("deleting shortUrl:%s", shortUrl)
-	if !ok {
-		log.Print("can't delete record")
 		handleInvalidRequest(writer, request)
 		return
 	}

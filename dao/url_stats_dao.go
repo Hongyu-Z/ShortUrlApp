@@ -2,7 +2,8 @@ package dao
 
 import "ShortUrlApp/models"
 
+//go:generate mockery --name UrlStatsDao --inpackage --case underscore
 type UrlStatsDao interface {
-	Create(event *models.UrlStatsEvent) error
+	Save(event *models.UrlStatsEvent) error
 	GetCount(shortUrl string) (int, int, int, error)
 }

@@ -2,6 +2,7 @@ package dao
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"ShortUrlApp/models"
@@ -33,6 +34,7 @@ func (impl *UrlRecordDaoImpl) Find(shortUrl string) (*models.UrlRecord, error) {
 		return nil, err
 	}
 	if !record.ExpireAt.IsZero() && record.ExpireAt.Before(time.Now()) {
+		log.Printf("record for %s found but expired. deleting the record.", shortUrl)
 		impl.Delete(record.ShortUrl)
 		return nil, errors.New("record doesn't exist")
 	}
