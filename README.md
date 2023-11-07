@@ -75,4 +75,5 @@ number of entries in DB between a time range, which are inefficient, especially 
 A few ideas to consider for improvement are:
    1. store the events and do batch writes once every second or so.
    2. instead of storing a new row for each event record, we can only store and update the count for each short url.
-2. For easier distribution and deployment, a container like Docker can be used.
+2. Error handling is very limited. Most errors are considered invalid request and return 400.
+3. For easier distribution and deployment, a container like Docker can be used.
