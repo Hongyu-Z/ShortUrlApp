@@ -15,8 +15,9 @@ func Init() *sql.DB {
 
 	//DEMO PURPOSES: creating two tables, "urls" and "stats" and index
 	sqlStmt := `
+	PRAGMA foreign_keys=ON;
 	CREATE TABLE urls (short_url text NOT NULL PRIMARY KEY, long_url text NOT NULL, expire_at timestamp NOT NULL);
-	CREATE TABLE stats (id INTEGER PRIMARY KEY AUTOINCREMENT, short_url text NOT NULL, created_at timestamp NOT NULL);
+	CREATE TABLE stats (id INTEGER PRIMARY KEY AUTOINCREMENT, short_url text NOT NULL REFERENCES urls(short_url) ON DELETE CASCADE, created_at timestamp NOT NULL);
 	CREATE INDEX idx_short_url_created_at ON stats(short_url, created_at)
 	`
 	_, err = db.Exec(sqlStmt)
