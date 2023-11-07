@@ -1,7 +1,8 @@
 # ShortUrlApp
 
 ## Demo
-<a href="https://youtu.be/XmaZGW1bTVw"><img width="400" src="https://github.com/Hongyu-Z/ShortUrlApp/assets/13667793/51f33a98-a071-42f7-ac28-8fe963a7b470" alt="Demo Video"></a>
+<a href="https://youtu.be/XmaZGW1bTVw"><img src="https://i9.ytimg.com/vi/XmaZGW1bTVw/mqdefault.jpg?sqp=CJTLqKoG-oaymwEmCMACELQB8quKqQMa8AEB-AHUCYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLAa9R4h4SYbg1Sj_5EaJbFBfgmMAQ" alt="Demo Video"></a>  
+https://youtu.be/XmaZGW1bTVw
 
 ## How to build and run
 Assuming local GoLang environment is set up already
